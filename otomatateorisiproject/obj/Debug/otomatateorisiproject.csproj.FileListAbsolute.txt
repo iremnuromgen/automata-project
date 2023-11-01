@@ -1,1 +1,9 @@
 c:\users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\bin\Debug\otomatateorisiproject.exe.config
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.csprojResolveAssemblyReference.cache
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.Form1.resources
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.Properties.Resources.resources
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.csproj.GenerateResource.Cache
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\bin\Debug\otomatateorisiproject.exe
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\bin\Debug\otomatateorisiproject.pdb
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.exe
+C:\Users\omgen\onedrive\belgeler\visual studio 2015\Projects\otomatateorisiproject\otomatateorisiproject\obj\Debug\otomatateorisiproject.pdb
