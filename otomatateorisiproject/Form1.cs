@@ -23,7 +23,7 @@ namespace otomatateorisiproject
             string alphabet = textBoxAlphabet.Text;
             string regex = textBoxRegex.Text;
             int numberOfWord = Convert.ToInt32(textBoxNumberOfWord.Text);
-
+            
             //letters isminde bir dizi oluşturup Split işlemi ile virgülle ayırarak her birinin farklı bir karakter olarak algılanmasını sağlıyorum
             string[] letters = alphabet.Split(',');
 
@@ -43,6 +43,63 @@ namespace otomatateorisiproject
             }
 
             labelRegex.Text = regex;
+
+            char[] characters = regex.ToCharArray();
+            string[] character = new string[characters.Length + 1];
+            string parentheses = "";
+            string[] parenthesesSplit = null;
+            int kleeneStar = 0;
+            Random random = new Random();
+            string generatedWord = "";
+
+            int maxRandomLetter = 10;
+
+
+            for(int i=0;i<characters.Length;i++)
+            {
+                character[i] = characters[i].ToString();
+            }
+
+            for(int i = 0 ; i < character.Length ; i++)
+            {
+                if(character[i] == null)
+                {
+                    break;
+                }
+                else if(character[i] == "(")
+                {
+                    parentheses = "";
+                    i++;
+                    while(i < character.Length && character[i] != ")")
+                    {
+                        parentheses += character[i];
+                        i++;
+                    }
+                    parenthesesSplit = parentheses.Split('+');
+                }
+                else if(character[i] == ")")
+                {
+                    kleeneStar = 0;
+                }
+                else if(character[i] == "*")
+                {
+                    kleeneStar = 1;
+                }
+            }
+
+            if(kleeneStar == 1)
+            {
+                for (int j=0; j<numberOfWord;j++)
+                {
+                    generatedWord = "";
+                    for(int k=0; k<maxRandomLetter;k++)
+                    {
+                        int randomIndex = random.Next(0, parenthesesSplit.Length);
+                        generatedWord += parenthesesSplit[randomIndex];
+                    }
+                    richTextBoxGeneratedWords.AppendText(generatedWord + Environment.NewLine);
+                }
+            }
         }
     }
 }
