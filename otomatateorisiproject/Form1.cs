@@ -19,21 +19,17 @@ namespace otomatateorisiproject
 
         private void buttonGenerate(object sender, EventArgs e)
         {
-            //kullanıcıdan ilk olarak alfabeyi, düzenli ifadeyi ve üretmek istediği kelime sayısı bilgisini alıyorum.
             string alphabet = textBoxAlphabet.Text;
             string regex = textBoxRegex.Text;
             int numberOfWord = Convert.ToInt32(textBoxNumberOfWord.Text);
             
-            //letters isminde bir dizi oluşturup Split işlemi ile virgülle ayırarak her birinin farklı bir karakter olarak algılanmasını sağlıyorum
             string[] letters = alphabet.Split(',');
 
-            //bir for döngüsü oluşturup Trim özelliği ile letters dizisindeki karakterlerin başındaki ve sonundaki boşlukları kaldırıyorum. Bu şekilde virgülden sonra boşluk koyulduysa harfin boşlukla yazılmasını engellemiş olacağım.
             for(int i=0; i<letters.Length ;i++)
             {
                 letters[i] = letters[i].Trim();
             }
 
-            //daha sonra bir foreach döngüsü oluşturdum. letters dizisi üzerinde dolaşıp her letter karakterinin boş veya null olup olmadığını kontrol ettirerek richtextboxa alt alta gelecek şekilde yazdırdım.
             foreach (string letter in letters)
             {
                 if(!string.IsNullOrEmpty(letter))
@@ -46,16 +42,14 @@ namespace otomatateorisiproject
 
             char[] characters = regex.ToCharArray();
             string[] character = new string[characters.Length + 1];
-            string parentheses = "";
+            string parentheses;
             string[] parenthesesSplit = null;
             int kleeneStar = 0;
             Random random = new Random();
-            string generatedWord = "";
-
-            int maxRandomLetter = 10;
+            string generatedWord ="";
 
 
-            for(int i=0;i<characters.Length;i++)
+            for (int i=0;i<characters.Length;i++)
             {
                 character[i] = characters[i].ToString();
             }
@@ -75,29 +69,36 @@ namespace otomatateorisiproject
                         parentheses += character[i];
                         i++;
                     }
+                    if(i < character.Length && character[i] == ")")
+                    {
+                        i++;
+                        if(i < character.Length && character[i] == "*")
+                        {
+                            kleeneStar = 1;
+                        }
+                    }
                     parenthesesSplit = parentheses.Split('+');
-                }
-                else if(character[i] == ")")
-                {
-                    kleeneStar = 0;
                 }
                 else if(character[i] == "*")
                 {
-                    kleeneStar = 1;
                 }
             }
 
-            if(kleeneStar == 1)
+            if (kleeneStar == 1)
             {
-                for (int j=0; j<numberOfWord;j++)
+                int wordLength = 0;
+
+                for (int j = 0; j < numberOfWord; j++)
                 {
                     generatedWord = "";
-                    for(int k=0; k<maxRandomLetter;k++)
+                    for (int k = 0; k < wordLength; k++)
                     {
                         int randomIndex = random.Next(0, parenthesesSplit.Length);
                         generatedWord += parenthesesSplit[randomIndex];
                     }
                     richTextBoxGeneratedWords.AppendText(generatedWord + Environment.NewLine);
+
+                    wordLength++;
                 }
             }
         }
