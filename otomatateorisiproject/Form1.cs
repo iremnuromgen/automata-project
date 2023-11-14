@@ -21,86 +21,154 @@ namespace otomatateorisiproject
         {
             string alphabet = textBoxAlphabet.Text;
             string regex = textBoxRegex.Text;
-            int numberOfWord = Convert.ToInt32(textBoxNumberOfWord.Text);
-            
-            string[] letters = alphabet.Split(',');
+            int wordCount = Convert.ToInt32(textBoxWordCount.Text);
 
-            for(int i=0; i<letters.Length ;i++)
+            string[] lettersArray = alphabet.Split(',');
+
+            for (int i = 0; i < lettersArray.Length; i++)
             {
-                letters[i] = letters[i].Trim();
+                lettersArray[i] = lettersArray[i].Trim();
             }
 
-            foreach (string letter in letters)
+            char[] charCharacters = regex.ToCharArray();
+            string[] stringCharacters = new string[charCharacters.Length + 1];
+
+            string inParentheses;
+            string[] inParenthesesSplit = null;
+            Random random = new Random();
+            string generatedWord = "";
+
+            for (int j = 0; j < charCharacters.Length; j++)
             {
-                if(!string.IsNullOrEmpty(letter))
+                stringCharacters[j] = charCharacters[j].ToString();
+            }
+
+            char[] charLetters = new char[charCharacters.Length];
+            int charCharactersIndex = 0;
+            bool letterError = false;
+
+
+            foreach (char c in charCharacters)
+            {
+                if (Char.IsLetter(c) && c >= 'a' && c <= 'z')
                 {
-                    richTextBoxAlphabet.AppendText(letter + Environment.NewLine);
+                    charLetters[charCharactersIndex++] = c;
                 }
             }
 
-            labelRegex.Text = regex;
-
-            char[] characters = regex.ToCharArray();
-            string[] character = new string[characters.Length + 1];
-            string parentheses;
-            string[] parenthesesSplit = null;
-            int kleeneStar = 0;
-            Random random = new Random();
-            string generatedWord ="";
-
-
-            for (int i=0;i<characters.Length;i++)
+            string[] lettersOfRegexArray = new string[charCharactersIndex];
+            for (int j = 0; j < charCharactersIndex; j++)
             {
-                character[i] = characters[i].ToString();
+                lettersOfRegexArray[j] = charLetters[j].ToString();
             }
 
-            for(int i = 0 ; i < character.Length ; i++)
+            for (int i = 0; i < lettersOfRegexArray.Length; i++)
             {
-                if(character[i] == null)
+                bool letterMatch = false;
+
+                for (int j = 0; j < lettersArray.Length; j++)
                 {
+                    if (lettersOfRegexArray[i] == lettersArray[j])
+                    {
+                        letterMatch = true;
+                        break;
+                    }
+                }
+
+                if (!letterMatch)
+                {
+                    MessageBox.Show("Düzenli ifadede, alfabede bulunmayan bir harf var!");
+                    letterError = true;
                     break;
                 }
-                else if(character[i] == "(")
-                {
-                    parentheses = "";
-                    i++;
-                    while(i < character.Length && character[i] != ")")
-                    {
-                        parentheses += character[i];
-                        i++;
-                    }
-                    if(i < character.Length && character[i] == ")")
-                    {
-                        i++;
-                        if(i < character.Length && character[i] == "*")
-                        {
-                            kleeneStar = 1;
-                        }
-                    }
-                    parenthesesSplit = parentheses.Split('+');
-                }
-                else if(character[i] == "*")
-                {
-                }
             }
 
-            if (kleeneStar == 1)
+            if (!letterError)
             {
-                int wordLength = 0;
+                foreach (string letter in lettersArray)
+                {
+                    if (!string.IsNullOrEmpty(letter))
+                    {
+                        richTextBoxAlphabet.AppendText(letter + Environment.NewLine);
+                    }
+                }
 
-                for (int j = 0; j < numberOfWord; j++)
+                labelRegex.Text = regex;
+
+                for (int w = 0; w < wordCount; w++)
                 {
                     generatedWord = "";
-                    for (int k = 0; k < wordLength; k++)
-                    {
-                        int randomIndex = random.Next(0, parenthesesSplit.Length);
-                        generatedWord += parenthesesSplit[randomIndex];
-                    }
-                    richTextBoxGeneratedWords.AppendText(generatedWord + Environment.NewLine);
 
-                    wordLength++;
+                    for (int i = 0; i < stringCharacters.Length; i++)
+                    {
+                        if (stringCharacters[i] == null)
+                        {
+                            break;
+                        }
+
+                        else if (stringCharacters[i] == "(")
+                        {
+                            inParentheses = "";
+                            i++;
+
+                            while (i < stringCharacters.Length && stringCharacters[i] != ")")
+                            {
+                                inParentheses = inParentheses + stringCharacters[i];
+                                i++;
+                            }
+
+                            inParenthesesSplit = inParentheses.Split('+');
+
+                            if (stringCharacters[i] == ")" && stringCharacters[i + 1] == "*")
+                            {
+
+                                int randomWordLength = random.Next(0, 10);
+                                for (int t = 0; t < randomWordLength; t++)
+                                {
+                                    int randomLetter = random.Next(0, inParenthesesSplit.Length);
+                                    generatedWord += inParenthesesSplit[randomLetter];
+                                }
+                            }
+                            else if (stringCharacters[i] == ")" && stringCharacters[i + 1] != "*")
+                            {
+
+                                int randomLetter = random.Next(0, inParenthesesSplit.Length);
+                                generatedWord += inParenthesesSplit[randomLetter];
+                            }
+                        }
+                        else if (stringCharacters[i] == "*")
+                        {
+                        }
+                        else if ((i == 0 && stringCharacters[i + 1] != "+") || (i > 0 && stringCharacters[i - 1] != "+" && stringCharacters[i + 1] != "+"))
+                        {
+                            if (stringCharacters[i + 1] == "*")
+                            {
+                                int randomWordLength = random.Next(0, 10);
+                                for (int m = 0; m < randomWordLength; m++)
+                                {
+                                    generatedWord += stringCharacters[i];
+                                }
+                            }
+                            else
+                            {
+                                generatedWord += stringCharacters[i];
+                            }
+                        }
+                    }
+
+                    richTextBoxGeneratedWord.AppendText(generatedWord + Environment.NewLine);
                 }
             }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            textBoxAlphabet.Clear();
+            textBoxRegex.Clear();
+            textBoxWordCount.Clear();
+            richTextBoxAlphabet.Clear();
+            richTextBoxGeneratedWord.Clear();
+            labelRegex.Text = "";
         }
     }
 }
